@@ -21,6 +21,7 @@ const UserSchema = new mongoose.Schema(
     },
     password: {
       type: String,
+      minLength: [8, "Password must be 8 or more characters"],
       required: [true, "Password is required"],
     },
     cartItems: [
@@ -47,8 +48,7 @@ const UserSchema = new mongoose.Schema(
   }
 );
 
-export const User = mongoose.model("User", UserSchema);
-
+// pre-save hook to hash password before saving to the database
 UserSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
 
@@ -60,5 +60,11 @@ UserSchema.pre("save", async function (next) {
     next(error as CallbackError);
   }
 });
+
+UserSchema.methods.comparePassword = async function (password: string) {
+  return bcrypt.compare(password, this.password);
+};
+
+export const User = mongoose.model("User", UserSchema);
 
 export default User;
