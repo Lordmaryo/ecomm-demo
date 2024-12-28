@@ -1,5 +1,18 @@
-import mongoose, { CallbackError } from "mongoose";
+import mongoose, { CallbackError, Schema } from "mongoose";
 import bcrypt from "bcryptjs";
+
+interface IUser {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  cartItems: {
+    quantity: number;
+    product: Schema.Types.ObjectId;
+  }[];
+  role: "CUSTOMER" | "ADMIN";
+  comparePassword: (password: string) => Promise<boolean>;
+}
 
 const UserSchema = new mongoose.Schema(
   {
@@ -65,6 +78,6 @@ UserSchema.methods.comparePassword = async function (password: string) {
   return bcrypt.compare(password, this.password);
 };
 
-export const User = mongoose.model("User", UserSchema);
+export const User = mongoose.model<IUser>("User", UserSchema);
 
 export default User;
