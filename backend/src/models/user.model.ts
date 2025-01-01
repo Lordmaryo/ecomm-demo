@@ -1,7 +1,7 @@
 import mongoose, { CallbackError, Schema } from "mongoose";
 import bcrypt from "bcryptjs";
 
-interface IUser {
+export interface IUser {
   firstName: string;
   lastName: string;
   email: string;

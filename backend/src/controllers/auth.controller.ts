@@ -1,7 +1,7 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import User from "../models/user.model";
 import { Types } from "mongoose";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import { redis } from "../lib/redis";
 
 //@ts-ignore
@@ -86,7 +86,6 @@ export const logout: RequestHandler = async (
         refreshToken,
         process.env.REFRESH_TOKEN_SECRET!
       );
-      console.log("decoded refresh token", decoded);
       if (typeof decoded !== "string" && "userId" in decoded) {
         await redis.del(`refresh_token:${decoded.userId}`);
       }
@@ -153,6 +152,7 @@ export const refreshToken: RequestHandler = async (
 };
 
 // TODO: implement get profile
+
 function setCookies(res: Response, accessToken: string, refreshToken: string) {
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
