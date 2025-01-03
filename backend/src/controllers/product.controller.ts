@@ -84,7 +84,6 @@ export const createProduct: RequestHandler = async (
   }
 };
 
-//@ts-ignore
 export const deleteProduct: RequestHandler = async (
   req: Request,
   res: Response
@@ -94,7 +93,8 @@ export const deleteProduct: RequestHandler = async (
     const product = await Product.findById(id);
 
     if (!product) {
-      return res.status(404).json({ message: "Product not found" });
+      res.status(404).json({ message: "Product not found" });
+      return;
     }
 
     if (product.image) {
@@ -103,14 +103,14 @@ export const deleteProduct: RequestHandler = async (
         await cloudinary.uploader.destroy(`products/${publicId}`);
         console.log("Image deleted from cloudinary");
       } catch (error) {
-        return res
+        res
           .status(500)
           .json({ message: `Error uploading image`, error: error });
       }
     }
 
     await Product.findByIdAndDelete(id);
-    return res.status(204).json({ message: "Product deleted successfully" });
+    res.status(204).json({ message: "Product deleted successfully" });
   } catch (error) {
     if (error instanceof Error) {
       res.status(500).json({ message: error.message });
