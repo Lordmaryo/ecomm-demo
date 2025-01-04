@@ -1,12 +1,15 @@
-import mongoose, { CallbackError, Schema } from "mongoose";
+import mongoose, { CallbackError, ObjectId, Schema } from "mongoose";
 import bcrypt from "bcryptjs";
 
 export interface IUser {
+  _id: ObjectId;
   firstName: string;
   lastName: string;
   email: string;
   password: string;
+  save: () => Promise<void>; // check this
   cartItems: {
+    // id: number | string,
     quantity: number;
     product: Schema.Types.ObjectId;
   }[];
