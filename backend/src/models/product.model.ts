@@ -1,12 +1,13 @@
 import mongoose, { Double } from "mongoose";
 
-interface IProduct {
+export interface IProduct {
   name: string;
   description: string;
   price: Double;
   image: string;
   category: string;
   isFeatured: boolean;
+  quantity: number; // check this
 }
 
 const ProductSchema = new mongoose.Schema(

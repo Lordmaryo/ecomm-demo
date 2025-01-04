@@ -5,6 +5,7 @@ import cartRoutes from "./routes/cart.route";
 import { connectDB } from "./lib/db";
 import cookieParser from "cookie-parser";
 import couponRoutes from "./routes/coupon.route";
+import paymentRoutes from "./routes/payment.route";
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -16,6 +17,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/product", productRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/coupon", couponRoutes);
+app.use("/api/payment", paymentRoutes);
 
 app.listen(PORT, () => {
   console.log("Server is running on port", PORT);

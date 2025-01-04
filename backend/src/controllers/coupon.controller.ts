@@ -61,4 +61,3 @@ export const validateCoupon: RequestHandler = async (
       .json({ message: "Internal Server Error: validateCoupon controller" });
   }
 };
-
