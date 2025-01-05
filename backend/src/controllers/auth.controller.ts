@@ -1,7 +1,7 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import User from "../models/user.model";
 import { Types } from "mongoose";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import { redis } from "../lib/redis";
 
 //@ts-ignore
@@ -53,7 +53,7 @@ export const signIn: RequestHandler = async (
     }
 
     const { accessToken, refreshToken } = generateTokens(user._id);
-    await storeRefreshToken(user._id, refreshToken);
+    await storeRefreshToken(user?._id, refreshToken);
     setCookies(res, accessToken, refreshToken);
 
     return res.status(200).json({
@@ -151,7 +151,18 @@ export const refreshToken: RequestHandler = async (
   }
 };
 
-// TODO: implement get profile
+export const getProfiles = async (req: Request, res: Response) => {
+  try {
+    res.json(req.user);
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(500).json({ message: error.message });
+    }
+    res
+      .status(500)
+      .json({ message: "Internal server error: getProfile controller" });
+  }
+};
 
 function setCookies(res: Response, accessToken: string, refreshToken: string) {
   res.cookie("accessToken", accessToken, {
