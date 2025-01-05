@@ -30,7 +30,7 @@ export const protectedRoute: RequestHandler = async (
       ).select("-password");
 
       if (!user) {
-        return res.status(401).json({ message: "User not not found" });
+        return res.status(401).json({ message: "User not found" });
       }
       req.user = user;
       next();
@@ -46,7 +46,9 @@ export const protectedRoute: RequestHandler = async (
     if (error instanceof Error) {
       return res.status(500).json({ message: error.message });
     }
-    return res.status(500).json({ message: "An unknown error occurred" });
+    return res
+      .status(500)
+      .json({ message: "Internal server error: protectedRoute middleware" });
   }
 };
 
