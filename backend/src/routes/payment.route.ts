@@ -1,6 +1,9 @@
 import express from "express";
 import { protectedRoute } from "../middleware/auth.middleware";
-import { createCheckoutSession } from "../controllers/payment.controller";
+import {
+  checkoutSucess,
+  createCheckoutSession,
+} from "../controllers/payment.controller";
 
 const paymentRoutes = express.Router();
 
@@ -9,5 +12,6 @@ paymentRoutes.post(
   protectedRoute,
   createCheckoutSession
 );
+paymentRoutes.post("/checkout-success", protectedRoute, checkoutSucess);
 
 export default paymentRoutes;

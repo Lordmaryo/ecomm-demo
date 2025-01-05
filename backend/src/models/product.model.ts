@@ -1,6 +1,8 @@
-import mongoose, { Double } from "mongoose";
+import mongoose, { Double, ObjectId } from "mongoose";
 
 export interface IProduct {
+  id?: ObjectId | string;
+  _id: ObjectId;
   name: string;
   description: string;
   price: Double;

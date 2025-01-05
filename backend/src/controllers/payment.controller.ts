@@ -3,6 +3,7 @@ import { IProduct } from "../models/product.model";
 import Coupon from "../models/coupon.model";
 import { stripe } from "../lib/stripe";
 import { ObjectId } from "mongoose";
+import Order from "../models/order.models";
 
 type ProductCouponDetails = {
   products: IProduct[];
@@ -65,6 +66,13 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
       metadata: {
         userId: req.user?._id.toString() || "",
         couponCode: couponCode || "",
+        products: JSON.stringify(
+          products.map((p) => ({
+            id: p._id,
+            quantity: p.quantity,
+            price: p.price,
+          }))
+        ),
       },
     });
 
@@ -85,11 +93,54 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
   }
 };
 
+export const checkoutSucess = async (req: Request, res: Response) => {
+  try {
+    const sessionId: string = req.body;
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+    if (session.payment_status === "paid") {
+      await Coupon.findOneAndUpdate(
+        {
+          code: session.metadata!.couponCode,
+          userId: session.metadata!.userId,
+        },
+        { isActive: false }
+      );
+
+      const products = JSON.parse(session.metadata!.products);
+      const newOrder = new Order({
+        user: session.metadata!.userId,
+        products: products.map((product: IProduct) => ({
+          product: product.id,
+          quantity: product.quantity,
+          price: product.price,
+        })),
+        totalAmount: session.amount_total ? session.amount_total / 100 : 0.0, // converts from cents to dollars
+        stripeSessionId: sessionId,
+      });
+
+      await newOrder.save();
+      res.status(200).json({
+        success: true,
+        message: "Payment successful and order created!",
+        orderId: newOrder._id,
+      });
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(500).json({ message: error.message });
+    }
+    res
+      .status(500)
+      .json({ message: "Internal server error: CheckoutSuccess controller" });
+  }
+};
+
 const createCoupon = async (userId: ObjectId) => {
   return await new Coupon({
     code: "GIFT" + Math.random().toString(36).substring(2, 8).toUpperCase(),
     discountPercentage: 10,
-    expirationDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+    expirationDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30), // 30 days
     userId,
   }).save();
 };
