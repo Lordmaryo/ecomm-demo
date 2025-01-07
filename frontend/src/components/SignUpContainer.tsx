@@ -1,12 +1,12 @@
 import { motion } from "framer-motion";
 import { Loader, Lock, Mail, User, UserPlus } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
-interface SignUpContainerProps {
-  setToggleLogin: (toggleLogin: boolean) => void;
+export interface ToggleEventProps {
+  setToggleEvent: (toggleEvent: boolean) => void;
 }
 
-const SignUpContainer = ({ setToggleLogin }: SignUpContainerProps) => {
+const SignUpContainer = ({ setToggleEvent }: ToggleEventProps) => {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
@@ -147,7 +147,7 @@ const SignUpContainer = ({ setToggleLogin }: SignUpContainerProps) => {
         <div className="text-center mt-2">
           <span>Already have an account? </span>
           <button
-            onClick={() => setToggleLogin(true)}
+            onClick={() => setToggleEvent(true)}
             className="text-black font-bold"
           >
             Login here{" "}

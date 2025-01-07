@@ -3,13 +3,14 @@ import SignUpContainer from "../components/SignUpContainer";
 import LoginContainer from "../components/LoginContainer";
 
 const SignInPage = () => {
-  const [toggleLogin, setToggleLogin] = useState(false);
+  const [toggleEvent, setToggleEvent] = useState(false);
+
   return (
     <div>
-      {toggleLogin ? (
-        <LoginContainer />
+      {toggleEvent ? (
+        <LoginContainer setToggleEvent={setToggleEvent} />
       ) : (
-        <SignUpContainer setToggleLogin={setToggleLogin} />
+        <SignUpContainer setToggleEvent={setToggleEvent} />
       )}
     </div>
   );
