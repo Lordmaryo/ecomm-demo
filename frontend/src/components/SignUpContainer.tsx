@@ -1,13 +1,15 @@
 import { motion } from "framer-motion";
 import { Loader, Lock, Mail, User, UserPlus } from "lucide-react";
 import React, { useState } from "react";
+import { useUseStore } from "../stores/useUserSore";
+import { useUseStoreProps } from "../types/types";
 
 export interface ToggleEventProps {
   setToggleEvent: (toggleEvent: boolean) => void;
 }
 
 const SignUpContainer = ({ setToggleEvent }: ToggleEventProps) => {
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -15,9 +17,11 @@ const SignUpContainer = ({ setToggleEvent }: ToggleEventProps) => {
     password: "",
     confirmPassword: "",
   });
+  const { signUp, loading }: useUseStoreProps = useUseStore();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    signUp(formData);
   };
 
   return (
