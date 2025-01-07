@@ -18,7 +18,7 @@ app.use(
   cors({
     origin: process.env.FRONTEND_DEV_URL,
     credentials: true,
-  })
+  }) 
 );
 
 app.use("/api/auth", authRoutes);

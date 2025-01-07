@@ -23,12 +23,12 @@ export const signUp: RequestHandler = async (
     setCookies(res, accessToken, refreshToken);
 
     return res.status(201).json({
-      user: {
+      // user: {
         id: newUser._id,
         firstName: newUser.firstName,
         lastName: newUser.lastName,
         role: newUser.role,
-      },
+      // },
       message: "User created succesfully!",
     });
   } catch (error) {
@@ -57,12 +57,12 @@ export const signIn: RequestHandler = async (
     setCookies(res, accessToken, refreshToken);
 
     return res.status(200).json({
-      user: {
+      // user: {
         userId: user._id,
         firstName: user.firstName,
         lastName: user.lastName,
         role: user.role,
-      },
+      // },
     });
   } catch (error) {
     if (error instanceof Error) {
