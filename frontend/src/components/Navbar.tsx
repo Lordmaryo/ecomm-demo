@@ -39,7 +39,7 @@ const Navbar = () => {
               <div>Home</div>
             </Link>
             {isAdmin && (
-              <Link to={"/dashboard"}>
+              <Link to={`/secrete-dashboard/${user?.firstName}`}>
                 <button className="flex flex-row items-center gap-2 bg-black text-white rounded-md py-1 px-2 hover:opacity-90 transition-opacity">
                   <Lock size={15} />
                   <span>Dashboard</span>
