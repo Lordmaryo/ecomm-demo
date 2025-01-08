@@ -35,7 +35,7 @@ const Navbar = () => {
             <Menu />
           </button>
           <div className="hidden md:flex flex-row items-center gap-x-4">
-            <Link to={"/"}>
+            <Link to={"/"} className="hover:font-bold transition-all">
               <div>Home</div>
             </Link>
             {isAdmin && (
@@ -68,7 +68,9 @@ const Navbar = () => {
           </div>
         </nav>
       </header>
-      <div>{toggleSidebar && <Sidebar setToggleSidebar={setToggleSidebar} />}</div>
+      <div className="">
+        {toggleSidebar && <Sidebar setToggleSidebar={setToggleSidebar} />}
+      </div>
     </>
   );
 };

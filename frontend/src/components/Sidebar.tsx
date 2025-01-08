@@ -14,17 +14,23 @@ const Sidebar = ({ setToggleSidebar }: toggleSidebarProps) => {
   return (
     <>
       <div
-        className="bg-[#0000009b] w-full h-screen"
+        className="bg-[#0000009b] w-full h-full fixed"
         onClick={() => setToggleSidebar(false)}
       />
-      <div className="px-4 bg-zinc-100 h-screen w-72 fixed top-0 left-0">
+      <div
+        onClick={() => setToggleSidebar(false)}
+        className="px-4 bg-zinc-100 h-screen w-72 fixed top-0 left-0"
+      >
         <Link to={"/"}>
           <h2 className="pt-4 font-bold">E-commerce</h2>
         </Link>
         <div className="flex flex-row items-center mt-5 gap-4">
           {isAdmin && (
             <Link to={"/dashboard"}>
-              <button className="flex flex-row items-center gap-2 bg-black text-white rounded-md py-1 px-2 hover:opacity-90 transition-opacity">
+              <button
+                onClick={() => setToggleSidebar(false)}
+                className="flex flex-row items-center gap-2 bg-black text-white rounded-md py-1 px-2 hover:opacity-90 transition-opacity"
+              >
                 <Lock size={15} />
                 <span>Dashboard</span>
               </button>
@@ -39,7 +45,7 @@ const Sidebar = ({ setToggleSidebar }: toggleSidebarProps) => {
               <span>Log out</span>
             </button>
           ) : (
-            <Link to={"/signin"}>
+            <Link to={"/signin"} onClick={() => setToggleSidebar(false)}>
               <div
                 title="Log In"
                 className="flex flex-row items-center gap-2 bg-zinc-200 p-2 rounded-md hover:opacity-75 transition-opacity"
@@ -50,7 +56,9 @@ const Sidebar = ({ setToggleSidebar }: toggleSidebarProps) => {
             </Link>
           )}
         </div>
-        <Link to={"/"}>Home</Link>
+        <Link to={"/"} onClick={() => setToggleSidebar(false)}>
+          Home
+        </Link>
       </div>
     </>
   );
