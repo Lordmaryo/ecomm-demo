@@ -5,10 +5,10 @@ import {
   LogInProps,
   SignUpProps,
   UserResponse,
-  useUseStoreProps,
+  useUserStoreProps,
 } from "../types/types";
 
-export const useUseStore = create<useUseStoreProps>((set, get) => ({
+export const useUseStore = create<useUserStoreProps>((set, get) => ({
   user: null,
   loading: false,
   checkingAuth: true,

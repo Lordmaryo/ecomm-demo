@@ -181,7 +181,7 @@ function setCookies(res: Response, accessToken: string, refreshToken: string) {
 
 const generateTokens = (userId: Types.ObjectId) => {
   const accessToken = jwt.sign({ userId }, process.env.ACCESS_TOKEN_SECRET!, {
-    expiresIn: "15m",
+    expiresIn: "2h", // TODO: set back to 15 mins
   });
 
   const refreshToken = jwt.sign({ userId }, process.env.REFRESH_TOKEN_SECRET!, {

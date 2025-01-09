@@ -11,7 +11,7 @@ export interface LogInProps {
   password: string;
 }
 
-export interface useUseStoreProps {
+export interface useUserStoreProps {
   user: UserResponse | null;
   loading: boolean;
   checkingAuth: boolean;
@@ -19,6 +19,13 @@ export interface useUseStoreProps {
   login: (props: LogInProps) => void;
   checkAuth: () => void;
   logout: () => void;
+}
+
+export interface useProductStoreProps {
+  loading: boolean;
+  products: Product[];
+  setProduct: (products: Product[]) => void;
+  createProduct: (newProduct: Product) => Promise<void>;
 }
 
 export enum Roles {
@@ -31,4 +38,12 @@ export interface UserResponse {
   firstName: string;
   lastName: string;
   role: Roles;
+}
+
+export interface Product {
+  name: string;
+  description: string;
+  price: number;
+  category: string;
+  image: string | null | ArrayBuffer;
 }

@@ -15,12 +15,12 @@ const AdminPage = () => {
   const [activeTab, setActiveTab] = useState(Tabs.CREATE);
 
   const tabs = [
-    { id: Tabs.CREATE, label: "Create Product", icon: PlusCircle },
+    { id: Tabs.CREATE, label: "Create", icon: PlusCircle },
     { id: Tabs.PRODUCTS, label: "Products", icon: ShoppingBasket },
     { id: Tabs.ANALYTICS, label: "Analytics", icon: BarChart },
   ];
   return (
-    <div className="max-w-[800px] mx-auto mt-10">
+    <div className="max-w-[800px] mx-auto mt-10 px-4">
       <motion.h1
         className="md:text-4xl sm:text-3xl text-2xl font-bold text-center"
         initial={{ opacity: 0, y: 20 }}

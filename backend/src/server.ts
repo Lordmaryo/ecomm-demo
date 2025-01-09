@@ -12,13 +12,13 @@ import cors from "cors";
 const app = express();
 const PORT = process.env.PORT || 8000;
 
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));
 app.use(cookieParser());
 app.use(
   cors({
     origin: process.env.FRONTEND_DEV_URL,
     credentials: true,
-  }) 
+  })
 );
 
 app.use("/api/auth", authRoutes);
