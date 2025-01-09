@@ -1,9 +1,10 @@
 import { BarChart, PlusCircle, ShoppingBasket } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import CreateProductForm from "../components/CreateProductForm";
 import ProductList from "../components/ProductList";
 import AnalyticsTab from "../components/AnalyticsTab";
+import { useProductStore } from "../stores/useProductStore";
 
 enum Tabs {
   CREATE = "CREATE",
@@ -13,12 +14,19 @@ enum Tabs {
 
 const AdminPage = () => {
   const [activeTab, setActiveTab] = useState(Tabs.CREATE);
+  const { getAllProduct } = useProductStore();
+
+  // Load the state before you get to getProduct component
+  useEffect(() => {
+    getAllProduct();
+  }, [getAllProduct]);
 
   const tabs = [
     { id: Tabs.CREATE, label: "Create", icon: PlusCircle },
     { id: Tabs.PRODUCTS, label: "Products", icon: ShoppingBasket },
     { id: Tabs.ANALYTICS, label: "Analytics", icon: BarChart },
   ];
+
   return (
     <div className="max-w-[800px] mx-auto mt-10 px-4">
       <motion.h1

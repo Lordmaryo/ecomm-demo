@@ -26,7 +26,7 @@ const Sidebar = ({ setToggleSidebar }: toggleSidebarProps) => {
         </Link>
         <div className="flex flex-row items-center mt-5 gap-4">
           {isAdmin && (
-            <Link to={"/dashboard"}>
+            <Link to={`/secrete-dashboard/${user?.firstName}`}>
               <button
                 onClick={() => setToggleSidebar(false)}
                 className="flex flex-row items-center gap-2 bg-black text-white rounded-md py-1 px-2 hover:opacity-90 transition-opacity"

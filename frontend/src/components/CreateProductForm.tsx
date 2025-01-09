@@ -1,6 +1,7 @@
 import { Loader, PlusCircle, Upload } from "lucide-react";
 import { useState } from "react";
 import { useProductStore } from "../stores/useProductStore";
+import toast from "react-hot-toast";
 
 const CreateProductForm = () => {
   const [formData, setFormData] = useState({
@@ -21,23 +22,23 @@ const CreateProductForm = () => {
     "t-shirts",
   ];
 
-  const { createProduct, loading, setProduct } = useProductStore();
+  const { createProduct, loading } = useProductStore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       await createProduct(formData);
-      // setProduct({
-      //   name: "",
-      //   description: "",
-      //   price: 0.0,
-      //   category: "",
-      //   image: "",
-      // });
+      setFormData({
+        name: "",
+        description: "",
+        price: 0.0,
+        category: "",
+        image: "",
+      });
     } catch (error: any) {
+      toast.error("Error upoading product");
       console.error("Error creating products", error.response.data.error);
     }
-    console.log(formData);
   };
 
   interface ImageChangeEvent extends React.ChangeEvent<HTMLInputElement> {

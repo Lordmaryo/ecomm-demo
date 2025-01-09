@@ -26,6 +26,9 @@ export interface useProductStoreProps {
   products: Product[];
   setProduct: (products: Product[]) => void;
   createProduct: (newProduct: Product) => Promise<void>;
+  deleteProduct: (productId: string) => Promise<void>;
+  getAllProduct: () => Promise<void>;
+  toggleFeauturedProduct: (productId: string) => Promise<void>;
 }
 
 export enum Roles {
@@ -41,9 +44,11 @@ export interface UserResponse {
 }
 
 export interface Product {
+  _id?: string;
   name: string;
   description: string;
   price: number;
   category: string;
-  image: string | null | ArrayBuffer;
+  image: string | null;
+  isFeatured?: boolean;
 }
