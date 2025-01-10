@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import LoadingSpinner from "./components/LoadingSpinner";
 import { Roles } from "./types/types";
 import AdminPage from "./pages/AdminPage";
+import CategoryPage from "./pages/CategoryPage";
 
 const App = () => {
   const { user, checkAuth, checkingAuth } = useUseStore();
@@ -32,6 +33,7 @@ const App = () => {
             user?.role === Roles.ADMIN ? <AdminPage /> : <Navigate to={"/"} />
           }
         />
+        <Route path="category/:category" element={<CategoryPage />} />
       </Routes>
       <Toaster />
     </div>

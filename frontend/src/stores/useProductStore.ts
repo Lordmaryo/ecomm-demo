@@ -39,6 +39,20 @@ export const useProductStore = create<useProductStoreProps>(
       }
     },
 
+    fetchProductByCategory: async (category) => {
+      set({ loading: true });
+      try {
+        const res = await axios.get(`/product/category/${category}`);
+        set({ products: res.data, loading: false });
+      } catch (error: any) {
+        set({ loading: false });
+        toast.error(
+          error.response.data.error || "something went wrong, try again later"
+        );
+        console.error("Error fetching products:", error.response.data);
+      }
+    },
+
     toggleFeauturedProduct: async (productId) => {
       set({ loading: true });
       try {

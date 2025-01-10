@@ -28,6 +28,7 @@ export interface useProductStoreProps {
   createProduct: (newProduct: Product) => Promise<void>;
   deleteProduct: (productId: string) => Promise<void>;
   getAllProduct: () => Promise<void>;
+  fetchProductByCategory: (category: string) => Promise<void>;
   toggleFeauturedProduct: (productId: string) => Promise<void>;
 }
 
