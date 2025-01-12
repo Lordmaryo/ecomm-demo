@@ -37,6 +37,7 @@ export interface useCartStoreProps {
   removeAllFromCart: (productId: string) => Promise<void>;
   updateQuantity: (productId: string, quantity: number) => Promise<void>;
   calculateTotals: () => void;
+  clearCart: () => void;
 }
 
 export interface Coupon {

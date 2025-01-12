@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import { IProduct } from "../models/product.model";
 import Coupon from "../models/coupon.model";
 import { stripe } from "../lib/stripe";
-import { ObjectId, Types } from "mongoose";
+import { Types } from "mongoose";
 import Order from "../models/order.models";
 
 type ProductCouponDetails = {
@@ -96,7 +96,7 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
 
 export const checkoutSucess = async (req: Request, res: Response) => {
   try {
-    const sessionId: string = req.body;
+    const sessionId: string = req.body.sessionId;
     const session = await stripe.checkout.sessions.retrieve(sessionId);
 
     if (session.payment_status === "paid") {

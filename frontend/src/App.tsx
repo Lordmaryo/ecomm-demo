@@ -11,6 +11,7 @@ import AdminPage from "./pages/AdminPage";
 import CategoryPage from "./pages/CategoryPage";
 import CartPage from "./pages/CartPage";
 import { useCartStore } from "./stores/useCartStore";
+import PaymentSucess from "./pages/PaymentSucess";
 
 const App = () => {
   const { user, checkAuth, checkingAuth } = useUseStore();
@@ -45,6 +46,10 @@ const App = () => {
         <Route
           path="cart"
           element={user ? <CartPage /> : <Navigate to={"/"} />}
+        />
+        <Route
+          path="/order/success"
+          element={user ? <PaymentSucess /> : <Navigate to={"/"} />}
         />
       </Routes>
       <Toaster />

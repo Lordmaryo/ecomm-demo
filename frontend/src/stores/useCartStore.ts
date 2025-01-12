@@ -101,5 +101,8 @@ export const useCartStore = create<useCartStoreProps>(
 
       set({ total, subTotal });
     },
+    clearCart: async () => {
+      set({ cart: [], coupon: null, total: 0.0, subTotal: 0.0 });
+    },
   })
 );
