@@ -51,12 +51,12 @@ export const removeAllFromCart = async (req: Request, res: Response) => {
 
     if (!productId) {
       user!.cartItems = [];
-      await user?.save();
     } else {
       user!.cartItems =
-        user?.cartItems.filter((item) => item.id === productId) || [];
-      await user?.save();
+        user?.cartItems.filter((item) => item.id !== productId) || [];
     }
+    await user?.save();
+    res.json(user?.cartItems);
   } catch (error) {
     if (error instanceof Error) {
       res.status(500).json({ message: error.message });

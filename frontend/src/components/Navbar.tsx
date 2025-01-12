@@ -4,10 +4,12 @@ import { useUseStore } from "../stores/useUserStore";
 import { Roles } from "../types/types";
 import { useState } from "react";
 import Sidebar from "./Sidebar";
+import { useCartStore } from "../stores/useCartStore";
 
 const Navbar = () => {
   const [toggleSidebar, setToggleSidebar] = useState(false);
   const { user, logout } = useUseStore();
+  const { cart } = useCartStore();
   const isAdmin = user?.role === Roles.ADMIN;
 
   return (
@@ -23,9 +25,11 @@ const Navbar = () => {
                 <ShoppingCart size={20} />
                 <span>Cart</span>
               </div>
-              <span className="font-bold flex justify-center items-center w-5 h-5 text-xs bg-black text-white absolute -top-2 -left-2 rounded-full">
-                5
-              </span>
+              {cart.length > 0 && (
+                <span className="font-bold flex justify-center items-center w-5 h-5 text-xs bg-black text-white absolute -top-2 -left-2 rounded-full">
+                  {cart.length}
+                </span>
+              )}
             </Link>
           )}
           <button

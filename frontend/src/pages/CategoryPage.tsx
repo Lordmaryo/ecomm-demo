@@ -35,12 +35,7 @@ const CategoryPage = () => {
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 place-items-center justify-center gap-4">
             {products.map((product) => (
-              <ProductCard
-                key={product._id}
-                productImage={product.image}
-                productPrice={product.price}
-                productName={product.name}
-              />
+              <ProductCard key={product._id} product={product} />
             ))}
           </div>
         )}

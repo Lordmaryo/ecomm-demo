@@ -9,7 +9,7 @@ export interface IUser {
   password: string;
   save: () => Promise<void>; // check this
   cartItems: {
-    // id: number | string,
+    id?: string; // check this
     quantity: number;
     product: Schema.Types.ObjectId;
   }[];

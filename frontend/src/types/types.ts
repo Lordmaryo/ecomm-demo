@@ -21,6 +21,32 @@ export interface useUserStoreProps {
   logout: () => void;
 }
 
+export interface CartProducts extends Product {
+  quantity: number;
+}
+
+export interface useCartStoreProps {
+  cart: Product[];
+  total: number;
+  subTotal: number;
+  coupon: Coupon | null;
+  loading: boolean;
+  isCouponApplied: boolean;
+  getCartItems: () => Promise<void>;
+  addTocart: (product: CartProducts) => Promise<void>;
+  removeAllFromCart: (productId: string) => Promise<void>;
+  updateQuantity: (productId: string, quantity: number) => Promise<void>;
+  calculateTotals: () => void;
+}
+
+export interface Coupon {
+  code: string;
+  discountPercentage: number;
+  expirationDate: Date;
+  isActive: boolean;
+  userId: string;
+}
+
 export interface useProductStoreProps {
   loading: boolean;
   products: Product[];
@@ -45,7 +71,8 @@ export interface UserResponse {
 }
 
 export interface Product {
-  _id?: string;
+  quantity: number;
+  _id: string;
   name: string;
   description: string;
   price: number;
