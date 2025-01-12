@@ -1,8 +1,9 @@
+import "dotenv/config";
 import { Request, Response } from "express";
 import { IProduct } from "../models/product.model";
 import Coupon from "../models/coupon.model";
 import { stripe } from "../lib/stripe";
-import { ObjectId } from "mongoose";
+import { ObjectId, Types } from "mongoose";
 import Order from "../models/order.models";
 
 type ProductCouponDetails = {
@@ -58,8 +59,8 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
       payment_method_types: ["card"],
       line_items: lineItems,
       mode: "payment",
-      success_url: `${process.env.FRONTEND_URL}/order/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.FRONTEND_URL}/order/payment-failed`,
+      success_url: `${process.env.FRONTEND_DEV_URL}/order/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.FRONTEND_DEV_URL}/order/payment-failed`,
       discounts: coupon
         ? [{ coupon: await createStripeCoupon(coupon.discountPercentage) }]
         : [],
@@ -136,7 +137,7 @@ export const checkoutSucess = async (req: Request, res: Response) => {
   }
 };
 
-const createCoupon = async (userId: ObjectId) => {
+const createCoupon = async (userId: Types.ObjectId) => {
   return await new Coupon({
     code: "GIFT" + Math.random().toString(36).substring(2, 8).toUpperCase(),
     discountPercentage: 10,

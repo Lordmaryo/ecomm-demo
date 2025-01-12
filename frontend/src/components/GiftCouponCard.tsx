@@ -10,7 +10,7 @@ const GiftCouponCard = () => {
   };
 
   const handleRemoveCoupon = () => {
-    console.log("Coupon removed");
+    setUserCouponInput("");
   };
 
   return (
@@ -22,7 +22,7 @@ const GiftCouponCard = () => {
           className="p-1 outline-none mt-2 rounded-md border border-zinc-500"
           value={userCouponInput}
           required
-          onChange={(e) => setUserCouponInput(e.target.value)}
+          onChange={(e) => setUserCouponInput(e.target.value.toUpperCase())}
         />
         <button
           onClick={handleCoupon}
@@ -30,6 +30,16 @@ const GiftCouponCard = () => {
         >
           Apply code
         </button>
+        {userCouponInput.length > 0 && (
+          <button
+            type="button"
+            className="mt-2 flex w-full items-center justify-center rounded-lg bg-red-600 
+            px-5 py-2.5 text-sm font-medium text-white hover:bg-red-700"
+            onClick={handleRemoveCoupon}
+          >
+            Remove Coupon
+          </button>
+        )}
       </div>
       {true && true && (
         <div>
@@ -45,14 +55,6 @@ const GiftCouponCard = () => {
               </span>
             </p>
           </div>
-          <button
-            type="button"
-            className="mt-2 flex w-full items-center justify-center rounded-lg bg-red-600 
-            px-5 py-2.5 text-sm font-medium text-white hover:bg-red-700"
-            onClick={handleRemoveCoupon}
-          >
-            Remove Coupon
-          </button>
         </div>
       )}
     </div>

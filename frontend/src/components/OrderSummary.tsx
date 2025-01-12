@@ -1,13 +1,44 @@
 import { MoveRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useCartStore } from "../stores/useCartStore";
+import { loadStripe } from "@stripe/stripe-js";
+import axios from "../lib/axios";
+import toast from "react-hot-toast";
+import { paymentSessionResponse } from "../types/types";
+
+const stripePromise = loadStripe(
+  "pk_test_51QdfJaBaJ5zIDcgOlE8R5mxA6DoSqI3HU2wDXnmLLVs1BQM8rxJmKttGEH8xzQkr8oXmo0AqDRgAdihL4TAFlgRE00Wb62aliu"
+);
 
 const OrderSummary = () => {
-  const { total, subTotal, isCouponApplied, coupon } = useCartStore();
+  const { total, subTotal, isCouponApplied, coupon, cart } = useCartStore();
   const savings = subTotal - total;
   const formattedTotal = total.toFixed(2);
   const formattedSubtotal = subTotal.toFixed(2);
   const formattedSavings = savings.toFixed(2);
+
+  const handlePayment = async () => {
+    try {
+      const stripe = await stripePromise;
+      const res = await axios.post<paymentSessionResponse>(
+        "/payment/create-checkout-session",
+        {
+          products: cart,
+          coupon: coupon ? coupon.code : null,
+        }
+      );
+      const session = res.data;
+      const result = await stripe?.redirectToCheckout({
+        sessionId: session.sessionId,
+      });
+
+      if (result?.error) {
+        console.error("Error in payment", result.error.message);
+      }
+    } catch (error) {
+      toast.error("Error processing payment");
+    }
+  };
 
   return (
     <div className="space-y-4 rounded-lg border p-4 shadow-md sm:p-6">
@@ -43,7 +74,7 @@ const OrderSummary = () => {
 
         <button
           className="flex w-full items-center justify-center rounded-lg bg-black px-5 py-2.5 text-sm font-medium text-white hover:bg-[#000000db] focus:outline-none"
-          // onClick={handlePayment}
+          onClick={handlePayment}
         >
           Proceed to Checkout
         </button>

@@ -80,3 +80,8 @@ export interface Product {
   image: string | null;
   isFeatured?: boolean;
 }
+
+export interface paymentSessionResponse {
+  sessionId: string;
+  totalAmount: number;
+}
