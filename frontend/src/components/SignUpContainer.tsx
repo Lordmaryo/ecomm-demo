@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import { Loader, Lock, Mail, User, UserPlus } from "lucide-react";
 import React, { useState } from "react";
 import { useUseStore } from "../stores/useUserStore";
-import { useUserStoreProps } from "../types/types";
 
 export interface ToggleEventProps {
   setToggleEvent: (toggleEvent: boolean) => void;

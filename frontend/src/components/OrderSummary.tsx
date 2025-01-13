@@ -24,7 +24,7 @@ const OrderSummary = () => {
         "/payment/create-checkout-session",
         {
           products: cart,
-          coupon: coupon ? coupon.code : null,
+          couponCode: coupon ? coupon.code : null,
         }
       );
       const session = res.data;

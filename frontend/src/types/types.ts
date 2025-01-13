@@ -38,6 +38,9 @@ export interface useCartStoreProps {
   updateQuantity: (productId: string, quantity: number) => Promise<void>;
   calculateTotals: () => void;
   clearCart: () => void;
+  removeCoupon: () => void;
+  getMyCoupon: () => Promise<void>;
+  validateCoupon: (code: string) => Promise<void>;
 }
 
 export interface Coupon {
@@ -86,3 +89,21 @@ export interface paymentSessionResponse {
   sessionId: string;
   totalAmount: number;
 }
+
+export interface AnalyticsDataProps {
+  users: 0;
+  products: 0;
+  totalSales: 0;
+  totalRevenue: 0;
+}
+
+export interface DailySalesData {
+  date: string;
+  sales: any;
+  revenue: any;
+}
+
+export type AnalyticsDataResponse = {
+  dailysalesData: DailySalesData[];
+  analyticsData: AnalyticsDataProps;
+};

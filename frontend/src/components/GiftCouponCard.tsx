@@ -1,15 +1,26 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCartStore } from "../stores/useCartStore";
 
 const GiftCouponCard = () => {
   const [userCouponInput, setUserCouponInput] = useState("");
-  const { coupon, isCouponApplied } = useCartStore();
+  const { coupon, isCouponApplied, getMyCoupon, removeCoupon, validateCoupon } =
+    useCartStore();
 
-  const handleCoupon = () => {
-    console.log(userCouponInput);
+  useEffect(() => {
+    getMyCoupon();
+  }, [getMyCoupon]);
+
+  useEffect(() => {
+    if (coupon) setUserCouponInput(coupon.code);
+  }, [coupon]);
+
+  const handleApplyCoupon = () => {
+    if (!userCouponInput) return;
+    validateCoupon(userCouponInput);
   };
 
   const handleRemoveCoupon = () => {
+    removeCoupon();
     setUserCouponInput("");
   };
 
@@ -25,7 +36,7 @@ const GiftCouponCard = () => {
           onChange={(e) => setUserCouponInput(e.target.value.toUpperCase())}
         />
         <button
-          onClick={handleCoupon}
+          onClick={handleApplyCoupon}
           className="bg-black hover:bg-[#000000df] transition-colors text-white py-2 px-4 rounded-md"
         >
           Apply code
@@ -41,11 +52,11 @@ const GiftCouponCard = () => {
           </button>
         )}
       </div>
-      {true && true && (
+      {isCouponApplied && coupon && (
         <div>
           <div className="text-sm mt-2">
             <p>
-              <span className="font-bold">Applied coupon: </span>
+              <span className="font-bold">Available coupon: </span>
               <span className="text-zinc-500">
                 {coupon?.code || "No coupon code"}
               </span>

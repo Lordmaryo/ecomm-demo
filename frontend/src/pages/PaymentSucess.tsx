@@ -9,11 +9,17 @@ const PaymentSucess = () => {
   const { clearCart } = useCartStore();
   const [isProcessing, setIsProcessing] = useState(true);
   const [error, setError] = useState("");
+  const [response, setResponse] = useState<{
+    message: string;
+    orderId: string;
+    success: boolean;
+  } | null>(null);
 
   useEffect(() => {
     const handlePaymentSuccess = async (sessionId: string | null) => {
       try {
         const res = await axios.post("payment/checkout-success", { sessionId });
+        setResponse(res.data);
         console.log(res.data);
         clearCart();
       } catch (error) {
@@ -66,7 +72,9 @@ const PaymentSucess = () => {
           <div className="rounded-lg p-4 mb-6">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-gray-400">Order number</span>
-              <span className="text-sm font-semibold ">#12345</span>
+              <span className="text-sm font-semibold ">
+                #{response?.orderId}
+              </span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-400">Estimated delivery</span>

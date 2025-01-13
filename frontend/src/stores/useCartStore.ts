@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import toast from "react-hot-toast";
-import { useCartStoreProps } from "../types/types";
+import { Coupon, useCartStoreProps } from "../types/types";
 import axios from "../lib/axios";
 
 export const useCartStore = create<useCartStoreProps>(
@@ -103,6 +103,33 @@ export const useCartStore = create<useCartStoreProps>(
     },
     clearCart: async () => {
       set({ cart: [], coupon: null, total: 0.0, subTotal: 0.0 });
+    },
+
+    getMyCoupon: async () => {
+      try {
+        const res = await axios.get<Coupon>("/coupon");
+        set({ coupon: res.data, isCouponApplied: true });
+        get().calculateTotals();
+      } catch (error) {
+        toast.error("Error getting coupon");
+        console.error("Error gettig coupons", error);
+      }
+    },
+    validateCoupon: async (code) => {
+      try {
+        const res = await axios.post<Coupon>("/coupon/validate", { code });
+        set({ coupon: res.data, isCouponApplied: true });
+        get().calculateTotals();
+        toast.success("Coupon successfully applied");
+      } catch (error) {
+        toast.error("Error validating coupon");
+        console.error("Error validating coupon", error);
+      }
+    },
+    removeCoupon: async () => {
+      set({ coupon: null, isCouponApplied: false });
+      get().calculateTotals();
+      toast("Coupon removed");
     },
   })
 );

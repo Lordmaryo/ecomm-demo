@@ -87,6 +87,7 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
   } catch (error) {
     if (error instanceof Error) {
       res.status(500).json({ message: error.message });
+      return;
     }
     res.status(500).json({
       message: "Internal server error: createCheckoutSession controller",
@@ -107,6 +108,12 @@ export const checkoutSucess = async (req: Request, res: Response) => {
         },
         { isActive: false }
       );
+
+      const existingOrder = await Order.findOne({ stripeSessionId: sessionId });
+      if (existingOrder) {
+        res.status(409).json({ message: "Order already processed" });
+        return;
+      }
 
       const products = JSON.parse(session.metadata!.products);
       const newOrder = new Order({
@@ -130,6 +137,7 @@ export const checkoutSucess = async (req: Request, res: Response) => {
   } catch (error) {
     if (error instanceof Error) {
       res.status(500).json({ message: error.message });
+      return;
     }
     res
       .status(500)
