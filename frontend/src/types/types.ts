@@ -59,6 +59,7 @@ export interface useProductStoreProps {
   deleteProduct: (productId: string) => Promise<void>;
   getAllProduct: () => Promise<void>;
   fetchProductByCategory: (category: string) => Promise<void>;
+  fetchFeauturedProduct: () => Promise<void>;
   toggleFeauturedProduct: (productId: string) => Promise<void>;
 }
 
@@ -104,6 +105,6 @@ export interface DailySalesData {
 }
 
 export type AnalyticsDataResponse = {
-  dailysalesData: DailySalesData[];
+  dailySalesData: DailySalesData[];
   analyticsData: AnalyticsDataProps;
 };

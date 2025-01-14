@@ -1,8 +1,18 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "../lib/axios";
 import { AnalyticsDataResponse, DailySalesData } from "../types/types";
 import { DollarSign, Package, ShoppingCart, Users } from "lucide-react";
 import AnalyticsCard from "./AnalyticsCard";
+import {
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 const AnalyticsTab = () => {
   const [dailySalesData, setDailySalesData] = useState<DailySalesData[]>([]);
@@ -19,7 +29,7 @@ const AnalyticsTab = () => {
       try {
         const res = await axios.get<AnalyticsDataResponse>("/analytics");
         setAnalyticsData(res.data.analyticsData);
-        setDailySalesData(res.data.dailysalesData);
+        setDailySalesData(res.data.dailySalesData);
       } catch (error) {
         console.error("Error fetching analytics:", error);
       } finally {
@@ -58,6 +68,34 @@ const AnalyticsTab = () => {
           icon={DollarSign}
           color=""
         />
+      </div>
+      <div className="rounded-lg p-6 shadow-lg">
+        <ResponsiveContainer width="100%" height={400}>
+          <LineChart data={dailySalesData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" stroke="#000000" />
+            <YAxis yAxisId="left" stroke="#000000" />
+            <YAxis yAxisId="right" orientation="right" stroke="#000000" />
+            <Tooltip />
+            <Legend />
+            <Line
+              yAxisId="left"
+              type="monotone"
+              dataKey="sales"
+              stroke="#10B981"
+              activeDot={{ r: 8 }}
+              name="Sales"
+            />
+            <Line
+              yAxisId="right"
+              type="monotone"
+              dataKey="revenue"
+              stroke="#3B82F6"
+              activeDot={{ r: 8 }}
+              name="Revenue"
+            />
+          </LineChart>
+        </ResponsiveContainer>
       </div>
     </div>
   );

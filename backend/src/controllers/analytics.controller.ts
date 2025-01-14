@@ -82,7 +82,7 @@ const getDailySalesData = async (startDate: Date, endDate: Date) => {
       return {
         date,
         sales: foundData?.sales || 0.0,
-        revenue: foundData?.revenue || 0.0,
+        revenue: foundData?.revenue.toFixed(2) || 0.0,
       };
     });
   } catch (error) {

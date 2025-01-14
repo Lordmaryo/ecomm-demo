@@ -1,6 +1,15 @@
+import { useEffect } from "react";
 import CategoryCard from "../components/CategoryCard";
+import { useProductStore } from "../stores/useProductStore";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const HomePage = () => {
+  const { fetchFeauturedProduct, loading, products } = useProductStore();
+
+  useEffect(() => {
+    fetchFeauturedProduct();
+  }, [fetchFeauturedProduct]);
+
   const categories = [
     { href: "/Jeans", name: "Jeans", imageUrl: "/jeans.jpg" },
     { href: "/t-shirts", name: "T-shirts", imageUrl: "/tshirts.jpg" },
@@ -24,6 +33,7 @@ const HomePage = () => {
           <CategoryCard category={category} key={index} />
         ))}
       </div>
+      <div className="mt-4">{loading ? <LoadingSpinner /> : <div></div>}</div>
     </div>
   );
 };

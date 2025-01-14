@@ -2,6 +2,7 @@ import { create } from "zustand";
 import toast from "react-hot-toast";
 import axios from "../lib/axios";
 import { Product, useProductStoreProps } from "../types/types";
+import { AxiosError } from "axios";
 
 export const useProductStore = create<useProductStoreProps>(
   (set): useProductStoreProps => ({
@@ -91,6 +92,23 @@ export const useProductStore = create<useProductStoreProps>(
           error.response.data.error || "something went wrong, try again later"
         );
         console.error("Error updating product:", error.response.data);
+      }
+    },
+    fetchFeauturedProduct: async () => {
+      set({ loading: true });
+      try {
+        const res = await axios.get("/product/featured");
+        console.log(res.data);
+        set({ products: res.data, loading: false });
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          set({ loading: false });
+          console.error(
+            "error fetching featured products",
+            error.response?.data.error
+          );
+        }
+        toast.error("Error fetching feautured products");
       }
     },
   })
