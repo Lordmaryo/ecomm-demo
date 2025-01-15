@@ -98,7 +98,6 @@ export const useProductStore = create<useProductStoreProps>(
       set({ loading: true });
       try {
         const res = await axios.get("/product/featured");
-        console.log(res.data);
         set({ products: res.data, loading: false });
       } catch (error) {
         if (error instanceof AxiosError) {

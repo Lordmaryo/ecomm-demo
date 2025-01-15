@@ -19,6 +19,7 @@ export interface useUserStoreProps {
   login: (props: LogInProps) => void;
   checkAuth: () => void;
   logout: () => void;
+  refreshToken: () => Promise<void>;
 }
 
 export interface CartProducts extends Product {

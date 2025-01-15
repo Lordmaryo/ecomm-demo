@@ -24,10 +24,10 @@ export const signUp: RequestHandler = async (
 
     return res.status(201).json({
       // user: {
-        id: newUser._id,
-        firstName: newUser.firstName,
-        lastName: newUser.lastName,
-        role: newUser.role,
+      id: newUser._id,
+      firstName: newUser.firstName,
+      lastName: newUser.lastName,
+      role: newUser.role,
       // },
       message: "User created succesfully!",
     });
@@ -58,10 +58,10 @@ export const signIn: RequestHandler = async (
 
     return res.status(200).json({
       // user: {
-        userId: user._id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        role: user.role,
+      userId: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      role: user.role,
       // },
     });
   } catch (error) {
@@ -127,7 +127,7 @@ export const refreshToken: RequestHandler = async (
     }
 
     const accessToken = jwt.sign(
-      //@ts-ignore
+      // @ts-ignore
       { userId: decoded.userId },
       process.env.ACCESS_TOKEN_SECRET!,
       {
@@ -181,7 +181,7 @@ function setCookies(res: Response, accessToken: string, refreshToken: string) {
 
 const generateTokens = (userId: Types.ObjectId) => {
   const accessToken = jwt.sign({ userId }, process.env.ACCESS_TOKEN_SECRET!, {
-    expiresIn: "2h", // TODO: set back to 15 mins
+    expiresIn: "15m",
   });
 
   const refreshToken = jwt.sign({ userId }, process.env.REFRESH_TOKEN_SECRET!, {

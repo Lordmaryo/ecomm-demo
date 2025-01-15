@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Loader, Lock, Mail } from "lucide-react";
 import { ToggleEventProps } from "./SignUpContainer";
-import { useUseStore } from "../stores/useUserStore";
+import { useUserStore } from "../stores/useUserStore";
 
 const LoginContainer = ({ setToggleEvent }: ToggleEventProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { login, loading } = useUseStore();
+  const { login, loading } = useUserStore();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

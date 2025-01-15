@@ -1,5 +1,5 @@
 import { Plus } from "lucide-react";
-import { useUseStore as useUserStore } from "../stores/useUserStore";
+import { useUserStore as useUserStore } from "../stores/useUserStore";
 import toast from "react-hot-toast";
 import { useCartStore } from "../stores/useCartStore";
 import { Product } from "../types/types";

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useUseStore } from "../stores/useUserStore";
+import { useUserStore } from "../stores/useUserStore";
 import { Lock, LogIn, LogOut } from "lucide-react";
 import { Roles } from "../types/types";
 
@@ -8,7 +8,7 @@ interface toggleSidebarProps {
 }
 
 const Sidebar = ({ setToggleSidebar }: toggleSidebarProps) => {
-  const { user, logout } = useUseStore();
+  const { user, logout } = useUserStore();
   const isAdmin = user?.role === Roles.ADMIN;
 
   return (

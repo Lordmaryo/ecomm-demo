@@ -3,7 +3,7 @@ import HomePage from "./pages/HomePage";
 import Navbar from "./components/Navbar";
 import SignInPage from "./pages/SignInPage";
 import { Toaster } from "react-hot-toast";
-import { useUseStore } from "./stores/useUserStore";
+import { useUserStore } from "./stores/useUserStore";
 import { useEffect } from "react";
 import LoadingSpinner from "./components/LoadingSpinner";
 import { Roles } from "./types/types";
@@ -15,7 +15,7 @@ import PaymentSucess from "./pages/PaymentSucess";
 import PaymentFailed from "./pages/PaymentFailed";
 
 const App = () => {
-  const { user, checkAuth, checkingAuth } = useUseStore();
+  const { user, checkAuth, checkingAuth } = useUserStore();
   const { getCartItems } = useCartStore();
 
   useEffect(() => {

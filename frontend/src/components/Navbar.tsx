@@ -1,6 +1,6 @@
 import { ShoppingCart, LogIn, LogOut, Lock, Menu } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useUseStore } from "../stores/useUserStore";
+import { useUserStore } from "../stores/useUserStore";
 import { Roles } from "../types/types";
 import { useState } from "react";
 import Sidebar from "./Sidebar";
@@ -8,7 +8,7 @@ import { useCartStore } from "../stores/useCartStore";
 
 const Navbar = () => {
   const [toggleSidebar, setToggleSidebar] = useState(false);
-  const { user, logout } = useUseStore();
+  const { user, logout } = useUserStore();
   const { cart } = useCartStore();
   const isAdmin = user?.role === Roles.ADMIN;
 
