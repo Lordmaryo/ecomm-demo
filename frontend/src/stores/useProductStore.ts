@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import toast from "react-hot-toast";
 import axios from "../lib/axios";
-import { Product, useProductStoreProps } from "../types/types";
+import { Product, ProductForm, useProductStoreProps } from "../types/types";
 import { AxiosError } from "axios";
 
 export const useProductStore = create<useProductStoreProps>(
@@ -10,7 +10,7 @@ export const useProductStore = create<useProductStoreProps>(
     products: [],
 
     setProduct: (products: Product[]) => set({ products }),
-    createProduct: async (newProduct: Product) => {
+    createProduct: async (newProduct: ProductForm) => {
       try {
         set({ loading: true });
         const res = await axios.post("/product", newProduct);

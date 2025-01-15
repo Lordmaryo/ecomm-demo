@@ -4,14 +4,6 @@ import { useProductStore } from "../stores/useProductStore";
 import toast from "react-hot-toast";
 
 const CreateProductForm = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    price: 0.0,
-    category: "",
-    image: "",
-  });
-
   const categories = [
     "Bags",
     "Glasses",
@@ -21,6 +13,14 @@ const CreateProductForm = () => {
     "Suits",
     "t-shirts",
   ];
+  
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+    price: 0.0,
+    category: "",
+    image: "",
+  });
 
   const { createProduct, loading } = useProductStore();
 

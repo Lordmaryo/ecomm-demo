@@ -56,7 +56,7 @@ export interface useProductStoreProps {
   loading: boolean;
   products: Product[];
   setProduct: (products: Product[]) => void;
-  createProduct: (newProduct: Product) => Promise<void>;
+  createProduct: (newProduct: ProductForm) => Promise<void>;
   deleteProduct: (productId: string) => Promise<void>;
   getAllProduct: () => Promise<void>;
   fetchProductByCategory: (category: string) => Promise<void>;
@@ -85,6 +85,14 @@ export interface Product {
   category: string;
   image: string | null;
   isFeatured?: boolean;
+}
+
+export interface ProductForm {
+  name: string;
+  description: string;
+  price: number;
+  category: string;
+  image: string;
 }
 
 export interface paymentSessionResponse {
