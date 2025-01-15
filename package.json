@@ -6,7 +6,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node-dev --env-file=.env --respawn --transpile-only backend/src/server.ts",
     "start": "node backend/src/server.ts",
-    "test-redis": "ts-node backend/src/lib/redis.ts"
+    "test-redis": "ts-node backend/src/lib/redis.ts",
+    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
   },
   "keywords": [],
   "author": "",
