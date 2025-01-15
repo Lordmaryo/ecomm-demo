@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import CategoryCard from "../components/CategoryCard";
 import { useProductStore } from "../stores/useProductStore";
 import LoadingSpinner from "../components/LoadingSpinner";
+import FeaturedProducts from "../components/FeaturedProducts";
 
 const HomePage = () => {
   const { fetchFeauturedProduct, loading, products } = useProductStore();
@@ -33,7 +34,9 @@ const HomePage = () => {
           <CategoryCard category={category} key={index} />
         ))}
       </div>
-      <div className="mt-4">{loading ? <LoadingSpinner /> : <div></div>}</div>
+      <div className="mt-4">
+        {loading ? <LoadingSpinner /> : <FeaturedProducts product={products} />}
+      </div>
     </div>
   );
 };

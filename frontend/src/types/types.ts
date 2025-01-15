@@ -33,7 +33,7 @@ export interface useCartStoreProps {
   loading: boolean;
   isCouponApplied: boolean;
   getCartItems: () => Promise<void>;
-  addTocart: (product: CartProducts) => Promise<void>;
+  addToCart: (product: CartProducts) => Promise<void>;
   removeAllFromCart: (productId: string) => Promise<void>;
   updateQuantity: (productId: string, quantity: number) => Promise<void>;
   calculateTotals: () => void;

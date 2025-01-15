@@ -9,7 +9,7 @@ type ProductCardProps = {
 };
 const ProductCard = ({ product }: ProductCardProps) => {
   const { user } = useUserStore();
-  const { addTocart, cart } = useCartStore();
+  const { addToCart: addTocart, cart } = useCartStore();
 
   const handleAddToCart = () => {
     if (user) {

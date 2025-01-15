@@ -26,7 +26,7 @@ export const useCartStore = create<useCartStoreProps>(
       }
     },
 
-    addTocart: async (product) => {
+    addToCart: async (product) => {
       set({ loading: true });
       try {
         await axios.post("/cart", { productId: product._id });
