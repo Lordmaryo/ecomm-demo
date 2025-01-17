@@ -6,7 +6,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node-dev --env-file=.env --respawn --transpile-only backend/src/server.ts",
     "start": "node backend/src/server.ts",
-    "test-redis": "ts-node backend/src/lib/redis.ts"
+    "test-redis": "ts-node backend/src/lib/redis.ts",
+    "mailtrap": "ts-node backend/src/mailtrap/mailtrap.ts"
   },
   "keywords": [],
   "author": "",
@@ -25,6 +26,7 @@
     "typescript": "^5.7.2"
   },
   "dependencies": {
+    "@types/dotenv": "^6.1.1",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^2.5.1",
     "cookie-parser": "^1.4.7",
@@ -32,6 +34,7 @@
     "express": "^4.21.2",
     "ioredis": "^5.4.2",
     "jsonwebtoken": "^9.0.2",
+    "mailtrap": "^3.4.0",
     "mongoose": "^8.9.2",
     "stripe": "^17.5.0"
   }

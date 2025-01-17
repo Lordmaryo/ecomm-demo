@@ -20,6 +20,7 @@ export interface useUserStoreProps {
   checkAuth: () => void;
   logout: () => void;
   refreshToken: () => Promise<void>;
+  verifyEmail: (code: string) => Promise<void>;
 }
 
 export interface CartProducts extends Product {
@@ -70,6 +71,7 @@ export enum Roles {
 }
 
 export interface UserResponse {
+  message?: string;
   userId: string;
   firstName: string;
   lastName: string;

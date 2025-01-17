@@ -3,16 +3,17 @@ import { create } from "zustand";
 import toast from "react-hot-toast";
 import {
   LogInProps,
+  Roles,
   SignUpProps,
   UserResponse,
   useUserStoreProps,
 } from "../types/types";
-import { AxiosError } from "axios";
 
 export const useUserStore = create<useUserStoreProps>((set, get) => ({
   user: null,
   loading: false,
   checkingAuth: true,
+
   signUp: async ({
     firstName,
     lastName,
@@ -23,6 +24,7 @@ export const useUserStore = create<useUserStoreProps>((set, get) => ({
     set({ loading: true });
 
     if (password !== confirmPassword) {
+      set({ loading: false });
       return toast.error("Passowrds do not match");
     }
 
@@ -49,6 +51,7 @@ export const useUserStore = create<useUserStoreProps>((set, get) => ({
         );
     }
   },
+
   login: async ({ email, password }: LogInProps) => {
     set({ loading: true });
 
@@ -57,7 +60,11 @@ export const useUserStore = create<useUserStoreProps>((set, get) => ({
         email,
         password,
       });
+
       set({ user: res.data, loading: false });
+      if (get().user?.role === Roles.ADMIN) {
+        return toast.success(res.data.message || "");
+      }
     } catch (error: any) {
       set({ loading: false });
 
@@ -67,6 +74,7 @@ export const useUserStore = create<useUserStoreProps>((set, get) => ({
       );
     }
   },
+
   checkAuth: async () => {
     try {
       const res = await axios.get<UserResponse>("/auth/profiles");
@@ -75,6 +83,7 @@ export const useUserStore = create<useUserStoreProps>((set, get) => ({
       set({ checkingAuth: false, user: null });
     }
   },
+
   logout: async () => {
     try {
       await axios.post("/auth/logout");
@@ -85,6 +94,7 @@ export const useUserStore = create<useUserStoreProps>((set, get) => ({
       );
     }
   },
+
   refreshToken: async () => {
     if (get().checkingAuth) return;
 
@@ -98,34 +108,48 @@ export const useUserStore = create<useUserStoreProps>((set, get) => ({
       throw error;
     }
   },
+
+  verifyEmail: async (code) => {
+    set({ loading: true });
+    try {
+      const res = await axios.post("/auth/verify-email", { code });
+      set({ user: res.data, loading: false });
+      toast.success("Email verification success!");
+    } catch (error: any) {
+      toast.error(
+        error.response.data.message ||
+          "An unknown error occured, try again later"
+      );
+    }
+  },
 }));
 
-let refreshPromise: Promise<void> | null = null;
+// let refreshPromise: Promise<void> | null = null;
 
-axios.interceptors.response.use(
-  (response) => response,
-  async (error: AxiosError) => {
-    const originalRequest: any = error.config;
+// axios.interceptors.response.use(
+//   (response) => response,
+//   async (error: AxiosError) => {
+//     const originalRequest: any = error.config;
 
-    if (error.response?.status === 401 && !originalRequest?._retry) {
-      originalRequest._retry = true;
+//     if (error.response?.status === 401 && !originalRequest?._retry) {
+//       originalRequest._retry = true;
 
-      try {
-        if (refreshPromise) {
-          await refreshPromise;
-          return axios(originalRequest);
-        }
+//       try {
+//         if (refreshPromise) {
+//           await refreshPromise;
+//           return axios(originalRequest);
+//         }
 
-        refreshPromise = useUserStore.getState().refreshToken();
-        await refreshPromise;
-        refreshPromise = null;
+//         refreshPromise = useUserStore.getState().refreshToken();
+//         await refreshPromise;
+//         refreshPromise = null;
 
-        return axios(originalRequest);
-      } catch (refreshError) {
-        useUserStore.getState().logout();
-        return Promise.reject(refreshError);
-      }
-    }
-    return Promise.reject(error);
-  }
-);
+//         return axios(originalRequest);
+//       } catch (refreshError) {
+//         useUserStore.getState().logout();
+//         return Promise.reject(refreshError);
+//       }
+//     }
+//     return Promise.reject(error);
+//   }
+// );

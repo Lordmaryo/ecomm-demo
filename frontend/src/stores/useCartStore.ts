@@ -21,7 +21,6 @@ export const useCartStore = create<useCartStoreProps>(
       } catch (error: any) {
         set({ cart: [], loading: false });
         const err = error.response.data.message;
-        toast.error(err || "Error fetching cart, try again later");
         console.error("Falied to fetch cart: ", err);
       }
     },

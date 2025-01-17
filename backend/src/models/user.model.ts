@@ -7,14 +7,20 @@ export interface IUser {
   lastName: string;
   email: string;
   password: string;
-  save: () => Promise<void>; // check this
+  save: () => Promise<void>;
   cartItems: {
-    id?: string; // check this
+    id?: string;
     quantity: number;
     product: Schema.Types.ObjectId;
   }[];
   role: "CUSTOMER" | "ADMIN";
   comparePassword: (password: string) => Promise<boolean>;
+  lastLogin: Date;
+  isVerified: Boolean;
+  resetPasswordToken: string | null;
+  resetPasswordExpiresAt: Date | null;
+  verificationToken: string | null;
+  verificationTokenExpiresAt: Date | null;
 }
 
 const UserSchema = new mongoose.Schema(
@@ -40,6 +46,18 @@ const UserSchema = new mongoose.Schema(
       minLength: [8, "Password must be 8 or more characters"],
       required: [true, "Password is required"],
     },
+    lastLogin: {
+      type: Date,
+      default: Date.now,
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    resetPasswordToken: String,
+    resetPasswordExpiresAt: Date,
+    verificationToken: String,
+    verificationTokenExpiresAt: { type: Date },
     cartItems: [
       {
         quantity: {

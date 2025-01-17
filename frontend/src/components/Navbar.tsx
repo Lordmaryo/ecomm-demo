@@ -42,7 +42,7 @@ const Navbar = () => {
             <Link to={"/"} className="hover:font-bold transition-all">
               <div>Home</div>
             </Link>
-            {isAdmin && (
+            {user && isAdmin && (
               <Link to={`/secrete-dashboard/${user?.firstName}`}>
                 <button className="flex flex-row items-center gap-2 bg-black text-white rounded-md py-1 px-2 hover:opacity-90 transition-opacity">
                   <Lock size={15} />

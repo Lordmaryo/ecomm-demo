@@ -3,6 +3,7 @@ import User from "../models/user.model";
 import { Types } from "mongoose";
 import jwt from "jsonwebtoken";
 import { redis } from "../lib/redis";
+import { sendVerificationEmail } from "../mailtrap/emails";
 
 //@ts-ignore
 export const signUp: RequestHandler = async (
@@ -46,10 +47,28 @@ export const signIn: RequestHandler = async (
   next: NextFunction
 ) => {
   try {
-    const { email, password } = req.body;
+    const { email, password }: { email: string; password: string } = req.body;
     const user = await User.findOne({ email });
     if (!user || !(await user.comparePassword(password))) {
       return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    if (user.role === "ADMIN") {
+      const verificationToken = generateVerificationToken();
+      const otpExpiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
+      await user.updateOne({
+        verificationToken,
+        verificationTokenExpiresAt: otpExpiresAt,
+      });
+
+      await sendVerificationEmail(email, verificationToken);
+
+      return res.status(200).json({
+        message: "OTP sent for admin verification",
+        userId: user._id,
+        firstName: user.firstName,
+        role: user.role,
+      });
     }
 
     const { accessToken, refreshToken } = generateTokens(user._id);
@@ -57,12 +76,10 @@ export const signIn: RequestHandler = async (
     setCookies(res, accessToken, refreshToken);
 
     return res.status(200).json({
-      // user: {
       userId: user._id,
       firstName: user.firstName,
       lastName: user.lastName,
       role: user.role,
-      // },
     });
   } catch (error) {
     if (error instanceof Error) {
@@ -120,7 +137,6 @@ export const refreshToken: RequestHandler = async (
       //@ts-ignore
       `refresh_token:${decoded.userId}`
     );
-    console.log("Stored refresh token", storedRefreshToken);
 
     if (refreshToken !== storedRefreshToken) {
       return res.status(401).json({ message: "Invalid refresh token" });
@@ -197,3 +213,42 @@ const storeRefreshToken = async (
 ) => {
   await redis.set(`refresh_token:${userId}`, refreshToken, "EX", 604800); // 7 days
 };
+
+export const verifyEmail = async (req: Request, res: Response) => {
+  const { code }: { code: string } = req.body;
+
+  try {
+    const user = await User.findOne({
+      verificationToken: code,
+      verificationTokenExpiresAt: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      res
+        .status(400)
+        .json({ success: false, message: "Invalid or expired token" });
+      return;
+    }
+
+    user.isVerified = true;
+    user.verificationToken = null;
+    user.verificationTokenExpiresAt = null;
+
+    await user.save();
+    const { accessToken, refreshToken } = generateTokens(user._id);
+    await storeRefreshToken(user?._id, refreshToken);
+    setCookies(res, accessToken, refreshToken);
+
+    res.status(200).json({
+      userId: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      role: user.role,
+    });
+  } catch (error) {
+    console.error("Error verifying otp", error);
+  }
+};
+
+const generateVerificationToken = () =>
+  Math.floor(10000 + Math.random() * 90000).toString();

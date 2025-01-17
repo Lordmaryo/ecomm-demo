@@ -1,4 +1,10 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import Navbar from "./components/Navbar";
 import SignInPage from "./pages/SignInPage";
@@ -13,24 +19,35 @@ import CartPage from "./pages/CartPage";
 import { useCartStore } from "./stores/useCartStore";
 import PaymentSucess from "./pages/PaymentSucess";
 import PaymentFailed from "./pages/PaymentFailed";
+import OtpVerification from "./pages/OtpVerification";
 
 const App = () => {
   const { user, checkAuth, checkingAuth } = useUserStore();
   const { getCartItems } = useCartStore();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     checkAuth();
   }, []);
 
   useEffect(() => {
+    if (user?.role === Roles.ADMIN) {
+      navigate("/otp-verification");
+    }
+  }, [navigate]);
+
+  useEffect(() => {
     if (!user) return;
     getCartItems();
   }, [user, getCartItems]);
 
+  const hideNavRoute = ["/otp-verification"];
+
   if (checkingAuth) return <LoadingSpinner />;
   return (
     <div className="min-h-screen relative overflow-hidden">
-      <Navbar />
+      {!hideNavRoute.includes(location.pathname) && <Navbar />}
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route
@@ -40,7 +57,11 @@ const App = () => {
         <Route
           path={`/secrete-dashboard/${user?.firstName}`}
           element={
-            user?.role === Roles.ADMIN ? <AdminPage /> : <Navigate to={"/"} />
+            user && user?.role === Roles.ADMIN ? (
+              <AdminPage />
+            ) : (
+              <Navigate to={"/"} />
+            )
           }
         />
         <Route path="category/:category" element={<CategoryPage />} />
@@ -56,8 +77,17 @@ const App = () => {
           path="/order/payment-failed"
           element={user ? <PaymentFailed /> : <Navigate to={"/"} />}
         />
+        <Route
+          path="/otp-verification"
+          element={
+            user?.role === Roles.ADMIN ? (
+              <OtpVerification />
+            ) : (
+              <Navigate to={"/"} />
+            )
+          }
+        />
       </Routes>
-
       <Toaster />
     </div>
   );
