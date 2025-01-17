@@ -1,3 +1,7 @@
+/**
+ * This mail service is for only USER with ADMIN priviledges...
+ */
+
 import { MailtrapClient } from "mailtrap";
 import "dotenv/config";
 

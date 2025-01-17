@@ -6,6 +6,8 @@ import {
   refreshToken,
   getProfiles,
   verifyEmail,
+  forgotPassword,
+  resetPassword,
 } from "../controllers/auth.controller";
 import { protectedRoute } from "../middleware/auth.middleware";
 
@@ -17,5 +19,7 @@ authRoutes.post("/logout", logout);
 authRoutes.post("/refresh-token", refreshToken);
 authRoutes.get("/profiles", protectedRoute, getProfiles);
 authRoutes.post("/verify-email", verifyEmail);
+authRoutes.post("/forgot-password", forgotPassword);
+authRoutes.post("/reset-password/:token", resetPassword);
 
 export default authRoutes;

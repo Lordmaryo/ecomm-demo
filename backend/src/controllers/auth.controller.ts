@@ -1,9 +1,15 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
+import crypto from "crypto";
+import bcrypt from "bcryptjs";
 import User from "../models/user.model";
 import { Types } from "mongoose";
 import jwt from "jsonwebtoken";
 import { redis } from "../lib/redis";
-import { sendVerificationEmail } from "../mailtrap/emails";
+import {
+  sendResetPasswordEmail,
+  sendResetSuccessEmail,
+  sendVerificationEmail,
+} from "../mailtrap/emails";
 
 //@ts-ignore
 export const signUp: RequestHandler = async (
@@ -247,6 +253,69 @@ export const verifyEmail = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error("Error verifying otp", error);
+  }
+};
+
+export const forgotPassword = async (req: Request, res: Response) => {
+  const { email }: { email: string } = req.body;
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      res
+        .status(400)
+        .json({ success: false, message: "This email does not exist" });
+      return;
+    }
+
+    const forgotPasswordToken = crypto.randomBytes(32).toString("hex");
+    const tokenExpiresAt = new Date(Date.now() + 1 * 60 * 60 * 1000); // 1hr
+    await user.updateOne(
+      { email },
+      {
+        resetPasswordToken: forgotPasswordToken,
+        resetPasswordExpiresAt: tokenExpiresAt,
+      }
+    );
+    await sendResetPasswordEmail(forgotPasswordToken, email);
+    res.status(201).json({ message: "Reset link sent to your email" });
+  } catch (error) {
+    res.status(500).json({ message: error });
+    console.error("Error sending reset password token", error);
+  }
+};
+
+export const resetPassword = async (req: Request, res: Response) => {
+  const { token } = req.params;
+  const { password }: { password: string } = req.body;
+
+  try {
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpiresAt: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      res
+        .status(400)
+        .json({ success: false, message: "Invalid or expired reset token" });
+      return;
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    user.password = hashedPassword;
+    user.resetPasswordToken = null;
+    user.resetPasswordExpiresAt = null;
+
+    sendResetSuccessEmail(user.email);
+
+    res
+      .status(201)
+      .json({ success: true, message: "password successfully reset" });
+  } catch (error) {
+    res.status(500).json({ message: error });
+    console.error("Error reseting password", error);
   }
 };
 
