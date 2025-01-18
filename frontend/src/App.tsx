@@ -29,7 +29,6 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    console.log("isUserVerified", user?.isVerified);
     if (!user) return;
     getCartItems();
   }, [user, getCartItems]);
