@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.character {
+  border: 1px grey solid;
+  background-color: white;
+  border-radius: 10px;
+}

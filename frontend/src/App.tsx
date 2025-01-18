@@ -31,6 +31,8 @@ const App = () => {
     checkAuth();
   }, []);
 
+  //TODO- add the isverified condition from the database and if
+  //the user is verified then no need to redirect to the home page
   useEffect(() => {
     if (user?.role === Roles.ADMIN) {
       navigate("/otp-verification");
