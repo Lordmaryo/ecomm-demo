@@ -65,6 +65,7 @@ export const signIn: RequestHandler = async (
       await user.updateOne({
         verificationToken,
         verificationTokenExpiresAt: otpExpiresAt,
+        isVerified: false,
       });
 
       await sendVerificationEmail(email, verificationToken);
@@ -111,12 +112,17 @@ export const logout: RequestHandler = async (
       );
       if (typeof decoded !== "string" && "userId" in decoded) {
         await redis.del(`refresh_token:${decoded.userId}`);
+        await User.findOneAndUpdate(
+          { _id: decoded.userId },
+          { isVerified: false },
+          { new: true }
+        );
       }
     }
 
     res.clearCookie("accessToken");
     res.clearCookie("refreshToken");
-    return res.status(200).json({ message: "Logged out successfully" });
+    return res.status(200).json({ message: "Logged out successfully",  });
   } catch (error) {
     if (error instanceof Error) {
       return res.status(500).json({ message: error.message });
@@ -250,6 +256,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
       firstName: user.firstName,
       lastName: user.lastName,
       role: user.role,
+      isVerified: user.isVerified,
     });
   } catch (error) {
     console.error("Error verifying otp", error);

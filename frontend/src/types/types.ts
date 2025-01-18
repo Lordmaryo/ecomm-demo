@@ -76,6 +76,7 @@ export interface UserResponse {
   firstName: string;
   lastName: string;
   role: Roles;
+  isVerified: boolean;
 }
 
 export interface Product {

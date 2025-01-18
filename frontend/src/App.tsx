@@ -2,8 +2,6 @@ import {
   Navigate,
   Route,
   Routes,
-  useLocation,
-  useNavigate,
 } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import Navbar from "./components/Navbar";
@@ -21,40 +19,39 @@ import PaymentSucess from "./pages/PaymentSucess";
 import PaymentFailed from "./pages/PaymentFailed";
 import OtpVerification from "./pages/OtpVerification";
 
+
 const App = () => {
   const { user, checkAuth, checkingAuth } = useUserStore();
   const { getCartItems } = useCartStore();
-  const navigate = useNavigate();
-  const location = useLocation();
 
   useEffect(() => {
     checkAuth();
   }, []);
 
-  //TODO- add the isverified condition from the database and if
-  //the user is verified then no need to redirect to the home page
   useEffect(() => {
-    if (user?.role === Roles.ADMIN) {
-      navigate("/otp-verification");
-    }
-  }, [navigate]);
-
-  useEffect(() => {
+    console.log("isUserVerified", user?.isVerified);
     if (!user) return;
     getCartItems();
   }, [user, getCartItems]);
 
-  const hideNavRoute = ["/otp-verification"];
-
   if (checkingAuth) return <LoadingSpinner />;
   return (
     <div className="min-h-screen relative overflow-hidden">
-      {!hideNavRoute.includes(location.pathname) && <Navbar />}
+      <Navbar />
+
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route
-          path="/signin"
-          element={!user ? <SignInPage /> : <Navigate to={"/"} />}
+          path={"/signin"}
+          element={
+            !user ? (
+              <SignInPage />
+            ) : user.role === Roles.ADMIN && !user.isVerified ? (
+              <Navigate to={"/otp-verification"} />
+            ) : (
+              <Navigate to={"/"} />
+            )
+          }
         />
         <Route
           path={`/secrete-dashboard/${user?.firstName}`}
@@ -82,10 +79,10 @@ const App = () => {
         <Route
           path="/otp-verification"
           element={
-            user?.role === Roles.ADMIN ? (
+            user?.role === Roles.ADMIN && !user?.isVerified ? (
               <OtpVerification />
             ) : (
-              <Navigate to={"/"} />
+              <Navigate to="/" />
             )
           }
         />

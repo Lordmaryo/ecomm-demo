@@ -114,7 +114,6 @@ export const useUserStore = create<useUserStoreProps>((set, get) => ({
       const res = await axios.post("/auth/verify-email", { code });
       set({ user: res.data, loading: false });
       toast.success("Email verification success!");
-      window.location.href = "/";
     } catch (error: any) {
       toast.error(
         error.response.data.message ||
