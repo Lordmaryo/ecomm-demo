@@ -121,6 +121,15 @@ export const useUserStore = create<useUserStoreProps>((set, get) => ({
       );
     }
   },
+
+  forgotPassword: async (email) => {
+    set({ loading: true });
+    try {
+      const res = await axios.post("/auth/forgot-password", { email });
+      set({ loading: false });
+      toast.success(res.data.message);
+    } catch (error) {}
+  },
 }));
 
 // let refreshPromise: Promise<void> | null = null;

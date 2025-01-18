@@ -1,8 +1,4 @@
-import {
-  Navigate,
-  Route,
-  Routes,
-} from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import Navbar from "./components/Navbar";
 import SignInPage from "./pages/SignInPage";
@@ -18,7 +14,7 @@ import { useCartStore } from "./stores/useCartStore";
 import PaymentSucess from "./pages/PaymentSucess";
 import PaymentFailed from "./pages/PaymentFailed";
 import OtpVerification from "./pages/OtpVerification";
-
+import ForgotPassword from "./pages/ForgotPassword";
 
 const App = () => {
   const { user, checkAuth, checkingAuth } = useUserStore();
@@ -63,6 +59,7 @@ const App = () => {
           }
         />
         <Route path="category/:category" element={<CategoryPage />} />
+        <Route path="forgot-password" element={<ForgotPassword />} />
         <Route
           path="cart"
           element={user ? <CartPage /> : <Navigate to={"/"} />}

@@ -21,6 +21,7 @@ export interface useUserStoreProps {
   logout: () => void;
   refreshToken: () => Promise<void>;
   verifyEmail: (code: string) => Promise<void>;
+  forgotPassword: (email: string) => Promise<void>;
 }
 
 export interface CartProducts extends Product {

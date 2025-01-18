@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Loader, Lock, Mail } from "lucide-react";
 import { ToggleEventProps } from "./SignUpContainer";
 import { useUserStore } from "../stores/useUserStore";
+import { Link } from "react-router-dom";
 
 const LoginContainer = ({ setToggleEvent }: ToggleEventProps) => {
   const [email, setEmail] = useState("");
@@ -81,14 +82,22 @@ const LoginContainer = ({ setToggleEvent }: ToggleEventProps) => {
             )}
           </button>
         </form>
-        <div className="text-center mt-2">
-          <span>Don't have an account? </span>
-          <button
-            onClick={() => setToggleEvent(false)}
-            className="text-black font-bold"
-          >
-            Sign up here{" "}
-          </button>
+        <div
+          className="max-w-[500px] mx-auto flex sm:flex-row flex-col justify-between
+        items-center gap-4 mt-3"
+        >
+          <div>
+            <span>Don't have an account? </span>
+            <button
+              onClick={() => setToggleEvent(false)}
+              className="text-black font-bold"
+            >
+              Sign up here{" "}
+            </button>
+          </div>
+          <Link to={"/forgot-password"} className="font-bold hover:underline">
+            Forgot Password?
+          </Link>
         </div>
       </motion.div>
     </div>
