@@ -122,7 +122,7 @@ export const logout: RequestHandler = async (
 
     res.clearCookie("accessToken");
     res.clearCookie("refreshToken");
-    return res.status(200).json({ message: "Logged out successfully",  });
+    return res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
     if (error instanceof Error) {
       return res.status(500).json({ message: error.message });
@@ -277,14 +277,12 @@ export const forgotPassword = async (req: Request, res: Response) => {
 
     const forgotPasswordToken = crypto.randomBytes(32).toString("hex");
     const tokenExpiresAt = new Date(Date.now() + 1 * 60 * 60 * 1000); // 1hr
-    await user.updateOne(
-      { email },
-      {
-        resetPasswordToken: forgotPasswordToken,
-        resetPasswordExpiresAt: tokenExpiresAt,
-      }
-    );
-    await sendResetPasswordEmail(forgotPasswordToken, email);
+
+    user.resetPasswordToken = forgotPasswordToken;
+    user.resetPasswordExpiresAt = tokenExpiresAt;
+
+    await user.save();
+    await sendResetPasswordEmail(email, forgotPasswordToken);
     res.status(201).json({ message: "Reset link sent to your email" });
   } catch (error) {
     res.status(500).json({ message: error });
@@ -314,6 +312,12 @@ export const resetPassword = async (req: Request, res: Response) => {
     user.password = hashedPassword;
     user.resetPasswordToken = null;
     user.resetPasswordExpiresAt = null;
+
+    await user.save();
+
+    console.log("user credential", user);
+    console.log("new password", password);
+    console.log("saved password", user.password);
 
     sendResetSuccessEmail(user.email);
 

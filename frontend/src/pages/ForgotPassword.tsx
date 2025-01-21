@@ -1,19 +1,37 @@
-import { ArrowLeft, Mail } from "lucide-react";
+import { ArrowLeft, Mail, MoveLeft } from "lucide-react";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
+import { useUserStore } from "../stores/useUserStore";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const { forgotPassword } = useUserStore();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitted(true);
+    const emailFormat = /^\S+@\S+\.\S+$/;
+
+    if (email.match(emailFormat)) {
+      forgotPassword(email);
+      setIsSubmitted(true);
+    } else {
+      toast.error("Not a valid email", { id: "error" });
+    }
   };
 
   return (
-    <div className="max-w-[500px] mx-auto shadow-lg bg-zinc-100 mt-10 p-4 text-center">
+    <div className="max-w-[500px] mx-auto shadow-lg bg-zinc-100 mt-10 p-4 text-center relative">
+      {isSubmitted && (
+        <button
+          onClick={() => setIsSubmitted(false)}
+          className="text-sm absolute top-7 left-4 font-bold hover:underline"
+        >
+          <MoveLeft size={20} />
+        </button>
+      )}
       <h1 className="text-2xl md:text-3xl lg:text-4xl font-semibold">
         Forgot Password
       </h1>

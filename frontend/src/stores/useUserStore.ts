@@ -25,7 +25,7 @@ export const useUserStore = create<useUserStoreProps>((set, get) => ({
 
     if (password !== confirmPassword) {
       set({ loading: false });
-      return toast.error("Passowrds do not match");
+      return toast.error("Passwords do not match");
     }
 
     try {
@@ -128,7 +128,33 @@ export const useUserStore = create<useUserStoreProps>((set, get) => ({
       const res = await axios.post("/auth/forgot-password", { email });
       set({ loading: false });
       toast.success(res.data.message);
-    } catch (error) {}
+    } catch (error) {
+      console.log("Error sending reset email", error);
+    }
+  },
+
+  resetPassword: async (token, password, confirmPassword) => {
+    if (password !== confirmPassword) {
+      set({ loading: false });
+      toast.error("Passwords do not match", { id: "error" });
+      return;
+    }
+
+    set({ loading: true });
+    try {
+      const res = await axios.post(`/auth/reset-password/${token}`, {
+        password,
+      });
+      toast.success(res.data.message);
+      set({ loading: false });
+      window.location.href = "/signIn"
+    } catch (error: any) {
+      set({ loading: false });
+      console.error("Error resetting password", error.response.data.message);
+      toast.error(
+        error.response.data.message || "something went wrong, try again later"
+      );
+    }
   },
 }));
 

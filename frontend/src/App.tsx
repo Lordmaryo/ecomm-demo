@@ -15,6 +15,7 @@ import PaymentSucess from "./pages/PaymentSucess";
 import PaymentFailed from "./pages/PaymentFailed";
 import OtpVerification from "./pages/OtpVerification";
 import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 const App = () => {
   const { user, checkAuth, checkingAuth } = useUserStore();
@@ -81,6 +82,10 @@ const App = () => {
               <Navigate to="/" />
             )
           }
+        />
+        <Route
+          path="/reset-password/:token"
+          element={!user ? <ResetPassword /> : <Navigate to="/" />}
         />
       </Routes>
       <Toaster />
