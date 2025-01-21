@@ -8,6 +8,7 @@ import {
   UserResponse,
   useUserStoreProps,
 } from "../types/types";
+import { AxiosError } from "axios";
 
 export const useUserStore = create<useUserStoreProps>((set, get) => ({
   user: null,
@@ -147,7 +148,7 @@ export const useUserStore = create<useUserStoreProps>((set, get) => ({
       });
       toast.success(res.data.message);
       set({ loading: false });
-      window.location.href = "/signIn"
+      window.location.href = "/signIn";
     } catch (error: any) {
       set({ loading: false });
       console.error("Error resetting password", error.response.data.message);
@@ -158,32 +159,32 @@ export const useUserStore = create<useUserStoreProps>((set, get) => ({
   },
 }));
 
-// let refreshPromise: Promise<void> | null = null;
+let refreshPromise: Promise<void> | null = null;
 
-// axios.interceptors.response.use(
-//   (response) => response,
-//   async (error: AxiosError) => {
-//     const originalRequest: any = error.config;
+axios.interceptors.response.use(
+  (response) => response,
+  async (error: AxiosError) => {
+    const originalRequest: any = error.config;
 
-//     if (error.response?.status === 401 && !originalRequest?._retry) {
-//       originalRequest._retry = true;
+    if (error.response?.status === 401 && !originalRequest?._retry) {
+      originalRequest._retry = true;
 
-//       try {
-//         if (refreshPromise) {
-//           await refreshPromise;
-//           return axios(originalRequest);
-//         }
+      try {
+        if (refreshPromise) {
+          await refreshPromise;
+          return axios(originalRequest);
+        }
 
-//         refreshPromise = useUserStore.getState().refreshToken();
-//         await refreshPromise;
-//         refreshPromise = null;
+        refreshPromise = useUserStore.getState().refreshToken();
+        await refreshPromise;
+        refreshPromise = null;
 
-//         return axios(originalRequest);
-//       } catch (refreshError) {
-//         useUserStore.getState().logout();
-//         return Promise.reject(refreshError);
-//       }
-//     }
-//     return Promise.reject(error);
-//   }
-// );
+        return axios(originalRequest);
+      } catch (refreshError) {
+        useUserStore.getState().logout();
+        return Promise.reject(refreshError);
+      }
+    }
+    return Promise.reject(error);
+  }
+);

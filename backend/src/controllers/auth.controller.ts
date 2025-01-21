@@ -309,7 +309,7 @@ export const resetPassword = async (req: Request, res: Response) => {
 
     /**
      * There's a pre-save hook that automatically hash every user's password
-     * to the database.
+     * to the database, Which is why it is saved as a plain text
      */
     user.password = password;
     user.resetPasswordToken = null;

@@ -39,6 +39,16 @@ const AnalyticsTab = () => {
     fetchAnalytics();
   }, []);
 
+  function formatCurrency(amount: number): string {
+    if (amount >= 1_000_000) {
+      return `$${(amount / 1_000_000).toFixed(1)}M`;
+    } else if (amount >= 1_000) {
+      return `$${(amount / 1_000).toFixed(1)}k`;
+    } else {
+      return `$${amount.toFixed(2)}`;
+    }
+  }
+
   if (loading) return <div>Loading...</div>;
 
   return (
@@ -64,7 +74,7 @@ const AnalyticsTab = () => {
         />
         <AnalyticsCard
           title="Total Revenue"
-          value={"$" + analyticsData.totalRevenue.toLocaleString()}
+          value={formatCurrency(analyticsData.totalRevenue)}
           icon={DollarSign}
           color=""
         />
