@@ -307,20 +307,17 @@ export const resetPassword = async (req: Request, res: Response) => {
       return;
     }
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-    user.password = hashedPassword;
+    /**
+     * There's a pre-save hook that automatically hash every user's password
+     * to the database.
+     */
+    user.password = password;
     user.resetPasswordToken = null;
     user.resetPasswordExpiresAt = null;
 
     await user.save();
 
-    console.log("user credential", user);
-    console.log("new password", password);
-    console.log("saved password", user.password);
-
     sendResetSuccessEmail(user.email);
-
     res
       .status(201)
       .json({ success: true, message: "password successfully reset" });
